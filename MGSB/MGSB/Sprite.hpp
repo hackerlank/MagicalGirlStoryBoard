@@ -11,8 +11,7 @@ public:
 	void Scale();
 	void Rotate();
 	void Color();
-	void Write();
-private:
+	std::string Write();
 	std::vector<std::string> commands;
 };
 

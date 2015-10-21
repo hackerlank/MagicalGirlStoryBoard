@@ -7,8 +7,13 @@
 
 class Storyboard {
 public:
+	static Storyboard* Instance();
 	void Write(std::string destinationPath);
 private:
+	Storyboard() {};
+	Storyboard(const Storyboard&) {};
+	Storyboard& operator=(const Storyboard&) {};
+	static Storyboard* instance;
 	std::vector<Sprite> sprites;
 };
 

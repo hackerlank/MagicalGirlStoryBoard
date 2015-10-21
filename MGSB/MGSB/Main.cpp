@@ -4,11 +4,14 @@
 #include <string>
 
 int main() {
-	Storyboard storyboard;
-	std::string destinationPath = R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\
-								     MikitoP ft. Sana - I'm Just an Average Magical Girl, Sorry\
-								     MikitoP ft. Sana - I'm Just an Average Magical Girl, Sorry. (osuuci dot com) [Storyboard Test].osb)";
-	storyboard.Write(destinationPath);
+	std::string destinationPath = R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\)"
+								  R"(MikitoP ft. Sana - I'm Just an Average Magical Girl, Sorry\)"
+								  R"(MikitoP ft. Sana - I'm Just an Average Magical Girl, Sorry. (osuuci dot com).osb)";
+	Storyboard::Instance()->Write(destinationPath);
+	std::cout << "Generation complete" << std::endl;
+
+	std::string wait;
+	std::cin >> wait;
 
 	return 0;
 }

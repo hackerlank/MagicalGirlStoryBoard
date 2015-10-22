@@ -1,6 +1,8 @@
 #ifndef ORIGIN_HPP
 #define ORIGIN_HPP
 
+#include <string>
+
 enum Origin {
 	TopLeft,
 	TopCentre,
@@ -11,20 +13,9 @@ enum Origin {
 	BottomLeft,
 	BottomCentre,
 	BottomRight,
-	Count
+	OriginCount
 };
 
-
-std::string Origins[Origin::Count] = { 
-	"TopLeft",
-	"TopCentre",
-	"TopRight",
-	"CentreLeft",
-	"Centre",
-	"CentreRight",
-	"BottomLeft",
-	"BottomCentre",
-	"BottomRight" 
-};
+extern std::string Origins[];
 
 #endif//ORiGIN_HPP

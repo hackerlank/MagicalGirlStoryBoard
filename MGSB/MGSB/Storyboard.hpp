@@ -8,7 +8,7 @@
 class Storyboard {
 public:
 	static Storyboard* Instance();
-	void Write(std::string destinationPath);
+	void Write(const std::string& destinationPath);
 private:
 	Storyboard() {};
 	Storyboard(const Storyboard&) {};

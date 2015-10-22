@@ -8,14 +8,9 @@ enum Layer {
 	Fail,
 	Pass,
 	Foreground,
-	Count
+	LayerCount
 };
 
-std::string Layers[Layer::Count] = { 
-	"Background",
-	"Fail",
-	"Pass",
-	"Foreground" 
-};
+extern std::string Layers[];
 
 #endif//LAYER_HPP

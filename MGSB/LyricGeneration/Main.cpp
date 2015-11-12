@@ -1,8 +1,13 @@
-#include "SFML\Graphics.hpp"
+﻿#include "SFML\Graphics.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "Font.hpp"
+#include <locale>
+#include <codecvt>
+
+int TARGET_WIDTH = 800 * 2;
+int TARGET_HEIGHT = 600 * 2;
 
 sf::Font getFont(sf::Font prevFont) {
 	sf::Font font;
@@ -17,42 +22,57 @@ sf::Font getFont(sf::Font prevFont) {
 	}
 }
 
-int generateFontSize(int width, sf::Font font, std::string text, int fontSize = 5) {
+int generateFontSize(int width, sf::Font font, std::wstring text, int fontSize = 5) {
 	sf::Text test(sf::String(text), font, fontSize);
 	
 	while (ceil(test.getLocalBounds().width) < width) {
 		test.setCharacterSize(++fontSize);
 	}
 
-	return fontSize - 1;
+	return --fontSize;
 }
 
-int getKanjiFontSize(sf::Font font, std::string text) {
-	// 600-750
-	int kanjiWidth = rand() % 150 + 600;
+int getKanjiFontSize(sf::Font font, std::wstring text) {
+	// 75-85% of TARGET_WIDTH
+	double base = 0.75;
+	double variance = rand() % 10 / 100.0;
+	double percent = base + variance;
+	int kanjiWidth = (int) (TARGET_WIDTH * percent);
 	return generateFontSize(kanjiWidth, font, text);
 }
 
-int getEnglishFontSize(sf::Font font, std::string text) {
-	// 50-70% of 800
-	int englishWidth = (rand() % 20 + 50) * 800 / 100;
+int getEnglishFontSize(sf::Font font, std::wstring text) {
+	// 60-70% of TARGET_WIDTH
+	double base = 0.6;
+	double variance = rand() % 10 / 100.0;
+	double percent = base + variance;
+	int englishWidth = (int) (TARGET_WIDTH * percent);
 	return generateFontSize(englishWidth, font, text);
 }
 
-void generateImage(sf::Font font, std::string kanji, int kanjiFontSize, std::string english, int englishFontSize, std::string destinationPath) {
+void generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize, std::wstring english, int englishFontSize, std::string destinationPath) {
 	sf::Text kanjiText(sf::String(kanji), font, kanjiFontSize);
-	int kanjiWidth = (int) ceil(kanjiText.getLocalBounds().width);
-	int kanjiHeight = (int) ceil(kanjiText.getLocalBounds().height);
+	// The way SFML's getLocalBounds() works is pretty weird
+	// For reason, you have to add the .left and .top values
+	// to get the true values
+	sf::FloatRect kanjiRect = kanjiText.getLocalBounds();
+	int kanjiWidth = (int) ceil(kanjiRect.width + kanjiRect.left);
+	int kanjiHeight = (int) ceil(kanjiRect.height + kanjiRect.top);
 
 	sf::Text englishText(sf::String(english), font, englishFontSize);
-	int englishWidth = (int) ceil(englishText.getLocalBounds().width);
-	int englishHeight = (int) ceil(englishText.getLocalBounds().height);
+	sf::FloatRect englishRect = englishText.getLocalBounds();
+	int englishWidth = (int) ceil(englishRect.width + englishRect.left);
+	int englishHeight = (int) ceil(englishRect.height + englishRect.top);
 
-	// Space between kanji and english 50-100
-	int middleSpace = rand() % 50 + 50;
+	// Space between kanji and english
+	// 5-10% of height
+	double base = 0.05;
+	double variance = rand() % 5 / 100.0;
+	double percent = base + variance;
+	int middleSpace = (int) (TARGET_HEIGHT * percent);
 	int imageHeight = kanjiHeight + middleSpace + englishHeight;
 	int imageWidth = kanjiWidth;
-	
+	 
 	sf::RenderTexture render;
 	render.create(imageWidth, imageHeight);
 	render.draw(kanjiText);
@@ -64,36 +84,33 @@ void generateImage(sf::Font font, std::string kanji, int kanjiFontSize, std::str
 	render.draw(englishText);
 	
 	render.display();
-
 	render.getTexture().copyToImage().saveToFile(destinationPath);
 }
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
-	std::ifstream file("lyrics.txt");
-	std::string line;
-
-	// Skip byte order mark
-	std::getline(file, line);
-
+	std::wifstream file("lyrics.txt");
+	file.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
+	std::wstring line;
 	sf::Font prevFont;
 
 	for (int i = 0; std::getline(file, line); i++) {
-		if (i == 1)
-			break;
-
-		std::cout << "Processing Line: " << line << std::endl;
+		std::wcout << "Processing Line " << i << ": " << line << std::endl;
 		sf::Font font = getFont(prevFont);
 		prevFont = font;
 
-		std::string kanji = line;
+		std::wstring kanji = line;
 		int kanjiFontSize = getKanjiFontSize(font, line);
 
 		std::getline(file, line);
-		std::cout << "Processing Line: " << line << std::endl;
+		std::wcout << "Processing Line: " << line << std::endl;
 
-		std::string english = line;
-		int englishFontSize = getEnglishFontSize(font, line);
+		std::wstring english = line;
+		int englishFontSize = 0;
+		if (english.length() > 0) {
+			 englishFontSize = getEnglishFontSize(font, line);
+		}
 
 		std::string destinationPath("Lyrics\\" + std::to_string(i) + ".png");
 		std::cout << "Generating image" << std::endl;

@@ -1,12 +1,14 @@
 #include "Font.hpp"
 
 std::string Fonts[Font::COUNT] = {
-	"amakara_sample.ttf",
-	"elmer_p.ttf",
-	"gomarice_mukasi_mukasi.TTF",
-	"JKG-L_3.ttf",
-	"love.ttf",
-	"mikiyu-mokomori-kuro.ttf",
-	"SNsanafonyu.ttf",
-	"yamafont.ttf"
+	"Fonts\\amakara_sample.ttf",
+	"Fonts\\elmer_p.ttf",
+	"Fonts\\gomarice_mukasi_mukasi.TTF",
+	"Fonts\\JKG-L_3.ttf",
+	"Fonts\\KFhimaji.otf",
+	"Fonts\\love.ttf",
+	"Fonts\\mikiyu-mokomori-kuro.ttf",
+	"Fonts\\mini-wakuwaku.otf",
+	"Fonts\\SNsanafonyu.ttf",
+	"Fonts\\yamafont.ttf"
 };

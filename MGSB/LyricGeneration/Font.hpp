@@ -8,8 +8,10 @@ enum Font {
 	elmer_p,
 	gomarice_mukasi_mukasi,
 	JKG_L_3,
+	KFhimaji,
 	love,
-	mikiyu_mokomori_kuro, // 5
+	mikiyu_mokomori_kuro,
+	mini_wakuwaku,
 	SNsanafonyu,
 	yamafont,
 	COUNT,

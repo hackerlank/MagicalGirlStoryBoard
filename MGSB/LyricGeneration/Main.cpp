@@ -1,4 +1,4 @@
-#include <pngwriter.h>
+#include "SFML\Graphics.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,7 +14,9 @@ std::string getFontPath(std::string prevFontPath) {
 }
 
 int generateFontSize(int width, std::string fontPath, std::string text, int fontSize = 5) {
-	pngwriter test;
+	CImg<unsigned char> test;
+	unsigned char color = 4;
+	test.draw_text(0, 0, &text[0u], 0, 0, 0, )
 	int testWidth = test.get_text_width_utf8(&fontPath[0u], fontSize, &text[0u]);
 	if (testWidth < width) {
 		return generateFontSize (width, fontPath, text, ++fontSize);
@@ -54,13 +56,13 @@ void generateImage(std::string fontPath, std::string kanji, int kanjiFontSize, s
 	pngwriter image(imageWidth, imageHeight, 0, &destinationPath[0u]);
 
 	Vector2 kanjiPosition(buffer, buffer);
-	image.plot_text_utf8(&fontPath[0u], 10, kanjiPosition.x, kanjiPosition.y, 0.0, &kanji[0u], 255, 255, 255);
+	image.plot_text_utf8(&fontPath[0u], 10, kanjiPosition.x, kanjiPosition.y, 0.0, &kanji[0u], 1.0, 1.0, 1.0);
 
 	int englishWidth = test.get_text_width_utf8(&fontPath[0u], englishFontSize, &english[0u]);
 	Vector2 englishPosition;
 	englishPosition.x = imageWidth / 2 - englishWidth / 2;
 	englishPosition.y = buffer + kanjiHeight + middleSpace;
-	image.plot_text_utf8(&fontPath[0u], 10, englishPosition.x, englishPosition.y, 0.0, &english[0u], 255, 255, 255);
+	image.plot_text_utf8(&fontPath[0u], 10, englishPosition.x, englishPosition.y, 0.0, &english[0u], 1.0, 1.0, 1.0);
 
 	image.close();
 }
@@ -69,9 +71,16 @@ int main(int argc, char* argv[]) {
 	srand(time(NULL));
 	std::ifstream file("lyrics.txt");
 	std::string line;
+
+	// Skip byte order mark
+	std::getline(file, line);
+
 	std::string prevFontPath = "";
 
 	for (int i = 0; std::getline(file, line); i++) {
+		if (i == 1)
+			break;
+
 		std::cout << "Processing Line: " << line << std::endl;
 		std::string fontPath = getFontPath(prevFontPath);
 

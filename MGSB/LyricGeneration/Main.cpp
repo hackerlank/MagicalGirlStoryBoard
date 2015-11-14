@@ -25,7 +25,8 @@ sf::Font getFont(sf::Font prevFont) {
 int generateFontSize(int width, sf::Font font, std::wstring text, int fontSize = 5) {
 	sf::Text test(sf::String(text), font, fontSize);
 	
-	while (ceil(test.getLocalBounds().width) < width) {
+	while (ceil(test.getLocalBounds().width) < width &&
+		   ceil(test.getLocalBounds().height) < TARGET_HEIGHT / 2) { // Set general height limit
 		test.setCharacterSize(++fontSize);
 	}
 

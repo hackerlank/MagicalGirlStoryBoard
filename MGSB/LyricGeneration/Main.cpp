@@ -2,9 +2,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include "Font.hpp"
 #include <locale>
 #include <codecvt>
+#include "LyricInfoManager.hpp"
+#include "Vector2.hpp"
 
 int TARGET_WIDTH = 800 * 2;
 int TARGET_HEIGHT = 600 * 2;
@@ -51,7 +54,7 @@ int getEnglishFontSize(sf::Font font, std::wstring text) {
 	return generateFontSize(englishWidth, font, text);
 }
 
-void generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize, std::wstring english, int englishFontSize, std::string destinationPath) {
+sf::Vector2u generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize, std::wstring english, int englishFontSize, std::string destinationPath) {
 	sf::Text kanjiText(sf::String(kanji), font, kanjiFontSize);
 	// The way SFML's getLocalBounds() works is pretty weird
 	// For reason, you have to add the .left and .top values
@@ -86,6 +89,32 @@ void generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize, std::ws
 	
 	render.display();
 	render.getTexture().copyToImage().saveToFile(destinationPath);
+
+	return render.getSize();
+}
+
+int parseTime(std::wstring timing) {
+	std::wistringstream timingStream(timing);
+
+	int minute;
+	timingStream >> minute;
+	timingStream.clear();
+	timingStream.ignore();
+
+	int second;
+	timingStream >> second;
+	timingStream.clear();
+	timingStream.ignore();
+
+	int milliseconds;
+	timingStream >> milliseconds;
+	timingStream.clear();
+	timingStream.ignore();
+
+	minute *= 1000 * 60;
+	second *= 1000;
+	int total = minute + second + milliseconds;
+	return total;
 }
 
 int main(int argc, char* argv[]) {
@@ -95,12 +124,18 @@ int main(int argc, char* argv[]) {
 	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
 	std::wstring line;
 	sf::Font prevFont;
+	std::vector<LyricInfo> lyricInfos;
 
 	for (int i = 0; std::getline(file, line); i++) {
 		std::wcout << "Processing Line " << i << ": " << line << std::endl;
 		sf::Font font = getFont(prevFont);
 		prevFont = font;
 
+		std::wstring timing = line;
+		int milliseconds = parseTime(timing);
+
+		std::getline(file, line);
+		std::wcout << "Processing Line: " << line << std::endl;
 		std::wstring kanji = line;
 		int kanjiFontSize = getKanjiFontSize(font, line);
 
@@ -113,11 +148,24 @@ int main(int argc, char* argv[]) {
 			 englishFontSize = getEnglishFontSize(font, line);
 		}
 
+		int id = i;
 		std::string destinationPath("Lyrics\\" + std::to_string(i) + ".png");
 		std::cout << "Generating image" << std::endl;
-		generateImage(font, kanji, kanjiFontSize, english, englishFontSize, destinationPath);
+		sf::Vector2u renderSize = generateImage(font, kanji, kanjiFontSize, english, englishFontSize, destinationPath);
 		std::cout << "Generating image complete" << std::endl;
+
+		LyricInfo lyricInfo;
+		lyricInfo.id = id;
+		lyricInfo.timing = milliseconds;
+		lyricInfo.kanji = kanji;
+		lyricInfo.english = english;
+		lyricInfo.width = renderSize.x;
+		lyricInfo.height = renderSize.y;
+		lyricInfos.push_back(lyricInfo);
 	}
+
+	std::string destinationPath("Lyrics\\LyricInfo.txt");
+	LyricInfoManager::Instance()->Write(lyricInfos, destinationPath);
 
 	std::cout << "Lyric generation complete" << std::endl;
 	std::cin.get();

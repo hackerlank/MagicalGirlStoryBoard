@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MGSB", "MGSB\MGSB.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LyricGeneration", "LyricGeneration\LyricGeneration.vcxproj", "{93AD4011-DE4E-4110-9A41-8A7ACF072A7F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared", "Shared\Shared.vcxproj", "{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -33,6 +35,14 @@ Global
 		{93AD4011-DE4E-4110-9A41-8A7ACF072A7F}.Release|Win32.ActiveCfg = Release|Win32
 		{93AD4011-DE4E-4110-9A41-8A7ACF072A7F}.Release|Win32.Build.0 = Release|Win32
 		{93AD4011-DE4E-4110-9A41-8A7ACF072A7F}.Release|x64.ActiveCfg = Release|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Debug|ARM.ActiveCfg = Debug|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Debug|Win32.Build.0 = Debug|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Debug|x64.ActiveCfg = Debug|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Release|ARM.ActiveCfg = Release|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Release|Win32.ActiveCfg = Release|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Release|Win32.Build.0 = Release|Win32
+		{C5D57DD8-B7B1-4795-B842-1BCA77DDAD3A}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,8 +2,10 @@
 #include "Storyboard.hpp"
 #include <sstream>
 
-Sprite::Sprite(Layer layer, Origin origin, const std::string& filePath, Vector2 position) 
-	: layer(layer), origin(origin), filePath(filePath), position(position) {}
+Sprite::Sprite(const std::string& filePath, Vector2 position, Layer layer, Origin origin)
+	: layer(layer), origin(origin), filePath(filePath), position(position) {
+	Storyboard::Instance()->sprites.push_back(*this);
+}
 
 // _M,<easing>,<starttime>,<endtime>,<start_x>,<start_y>,<end_x>,<end_y>
 void Sprite::Move(int startTime, int endTime, int startX, int startY, int endX, int endY, Easing easing) {

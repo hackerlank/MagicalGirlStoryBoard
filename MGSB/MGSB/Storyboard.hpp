@@ -9,12 +9,12 @@ class Storyboard {
 public:
 	static Storyboard* Instance();
 	void Write(const std::string& destinationPath);
+	std::vector<Sprite> sprites;
 private:
 	Storyboard() {};
 	Storyboard(const Storyboard&) {};
 	Storyboard& operator=(const Storyboard&) {};
 	static Storyboard* instance;
-	std::vector<Sprite> sprites;
 };
 
 #endif//STORYBOARDP_HPP

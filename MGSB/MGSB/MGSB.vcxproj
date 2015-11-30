@@ -52,6 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Shared</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,7 +83,6 @@
     <ClCompile Include="Origin.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Storyboard.cpp" />
-    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Easing.hpp" />
@@ -90,7 +90,6 @@
     <ClInclude Include="Origin.hpp" />
     <ClInclude Include="Sprite.hpp" />
     <ClInclude Include="Storyboard.hpp" />
-    <ClInclude Include="Vector2.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

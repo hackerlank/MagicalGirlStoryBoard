@@ -2,13 +2,15 @@
 #include "Storyboard.hpp"
 #include <sstream>
 
-Sprite::Sprite(const std::string& filePath, Vector2 position, Layer layer, Origin origin)
-	: layer(layer), origin(origin), filePath(filePath), position(position) {
+Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, Layer layer, Origin origin)
+	: layer(layer), origin(origin), filePath(filePath), position(position), size(size) {
 	Storyboard::Instance()->sprites.push_back(*this);
 }
 
 // _M,<easing>,<starttime>,<endtime>,<start_x>,<start_y>,<end_x>,<end_y>
 void Sprite::Move(int startTime, int endTime, int startX, int startY, int endX, int endY, Easing easing) {
+	position.x = endX;
+	position.y = endY;
 	std::ostringstream command;
 	command << "_M," << Layers[easing] << "," << startTime << "," << endTime << "," << startX << "," << startY << "," << endX << "," << endY;
 	commands.push_back(command.str());
@@ -16,6 +18,7 @@ void Sprite::Move(int startTime, int endTime, int startX, int startY, int endX, 
 
 // _F,<easing>,<starttime>,<endtime>,<start_opacity>,<end_opacity>
 void Sprite::Fade(int startTime, int endTime, double startOpacity, double endOpacity, Easing easing) {
+	fade = endOpacity;
 	std::ostringstream command;
 	command << "_F," << Layers[easing] << "," << startTime << "," << endTime << "," << startOpacity << "," << endOpacity;
 	commands.push_back(command.str());
@@ -23,6 +26,7 @@ void Sprite::Fade(int startTime, int endTime, double startOpacity, double endOpa
 
 // _R,<easing>,<starttime>,<endtime>,<start_rotate>,<end_rotate>
 void Sprite::Rotate(int startTime, int endTime, double startRotate, double endRotate, Easing easing) {
+	rotation = endRotate;
 	std::ostringstream command;
 	command << "_R," << Layers[easing] << "," << startTime << "," << endTime << "," << startRotate << "," << endRotate;
 	commands.push_back(command.str());
@@ -30,6 +34,7 @@ void Sprite::Rotate(int startTime, int endTime, double startRotate, double endRo
 
 // _S,<easing>,<starttime>,<endtime>,<start_scale>,<end_scale>
 void Sprite::Scale(int startTime, int endTime, double startScale, double endScale, Easing easing) {
+	scale = endScale;
 	std::ostringstream command;
 	command << "_S," << Layers[easing] << "," << startTime << "," << endTime << "," << startScale << "," << endScale;
 	commands.push_back(command.str());

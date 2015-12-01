@@ -1,147 +1,294 @@
-﻿00:12:803
+0
+12803
 叶えたいパラダイスワールド
 I want to be in a Paradise World
-00:15:513
+1211
+256
+1
+15513
 めざせ平々凡々中流のありきたり
 Aiming for a typical normal life is typical
-00:18:997
+1345
+258
+2
+18997
 お昼時おっちょこちょいなお友達
 At lunchtime, the careless friends
-00:21:706
+1258
+215
+3
+21706
 サポートしなくちゃ、って焦る乙女達
 Have to be supported by the impatient young girls
-00:25:384
+1247
+229
+4
+25384
 ねぇちゃんと教えてよ
 Hey, please tell me
-00:28:480
+1219
+373
+5
+28480
 コソコソ内緒話ばっかりじゃツライツライ
 Why is that when people only whisper secrets I feel PAIN, PAIN
-00:31:577
+1221
+217
+6
+31577
 ストーリーの始まりは
 Starting the story
-00:34:674
+1238
+359
+7
+34674
 さくらの乱れる季節がいいでしょ
 With the season of falling cherry blossoms is good, right?
-00:39:319
+1249
+233
+8
+39319
 「出来ないよ」って言わないで遠回りでも
 Don't say "I can't do it," even in a roundabout way
-00:44:739
+1222
+221
+9
+44739
 くるくる廻りはじめてる
 We'll just start to spin and turn all around
-00:48:609
+1246
+241
+10
+48609
 YOU and ME
 
-00:51:706
+1202
+313
+11
+51706
 夜がどんなにどんなに牙向いても
 No matter how much, how badly the night bares its fangs
-00:56:739
+1198
+211
+12
+56739
 正義の味方は涙はみせない
 Allies of Justice never show tears
-01:04:093
+1278
+236
+13
+64093
 Du du du du~
 
-01:10:093
+1231
+270
+14
+70093
 特別じゃないフリをしていても
 Even though they pretend not to be special
-01:12:803
+1222
+237
+15
+72803
 ときに指さされ後ろ髪ひかれた
 Sometimes them flicking their hair with a finger can charm you
-01:16:287
+1287
+251
+16
+76287
 午前二時着信が響けば
 When the sound of 2 AM arriving rings loud
-01:18:997
+1305
+268
+17
+78997
 お着替えしなくちゃ、って焦る乙女達
 They have to get changed, those impatient young girls
-01:22:674
+1350
+261
+18
+82674
 ねぇちゃんと教えてよ
 Hey, please tell me
-01:25:771
+1344
+366
+19
+85771
 そろそろ本当の君の姿がミタイミタイ
 Isn't it about time your true form was SHOWN, SHOWN
-01:28:868
+1255
+240
+20
+88868
 ストーリーの始まりは
 The beginning of a story
-01:31:964
+1286
+328
+21
+91964
 いつでもましろな壁に描かれる
 Always starts out with a drawing on a pure white wall
-01:36:609
+1343
+276
+22
+96609
 「イケナイよ」って言わないで 型やぶりでも
 Don't say "I can't go on," no matter how badly you're hurt
-01:42:029
+1360
+178
+23
+102029
 正体不明さ誰だって
 It's undefinable, anyone can be
-01:45:900
+1293
+290
+24
+105900
 SICK and YOUTH
 
-01:48:997
+1203
+234
+25
+108997
 夜がどんなにどんなに柔らかくても
 No matter how dim the night becomes
-01:54:029
+1312
+284
+26
+114029
 アイツの頭はカチコチで困る
 Those foes' heads will roll and get beat down
-02:00:222
+1296
+255
+27
+120222
 流れて
 When it...
-02:03:319
+1094
+708
+28
+123319
 いるのは
 ...flows out...
-02:06:029
+1338
+621
+29
+126029
 大切な
 It's an important...
-02:08:739
+951
+528
+30
+128739
 時間
 ...moment
-02:10:674
+1017
+673
+31
+130674
 千の夜を越えて
 Even if a thousand nights pass
-02:15:706
+1280
+418
+32
+135706
 守って
 Because I want to...
-02:18:416
+983
+571
+33
+138416
 いたいから
 ...protect you
-02:21:126
+1330
+545
+34
+141126
 ちゃんと
 Please...
-02:23:061
+1252
+717
+35
+143061
 この手離さないで
 ...don't let go of my hand
-02:29:255
+1278
+375
+36
+149255
 この手離さないで
 Don't let go of my hand
-02:35:448
+1336
+404
+37
+155448
 Du du du du~
 
-02:38:739
+1310
+295
+38
+158739
 ハクション！
 A-ACHOO！
-02:40:093
+1382
+600
+39
+160093
 「出来ないよ」って言わないで遠回りでも
 Don't say "I can't do it," even in a roundabout way
-02:45:513
+1260
+199
+40
+165513
 くるくる廻りはじめてる
 We'll just start to spin and turn all around
-02:49:384
+1302
+267
+41
+169384
 YOU and ME
 
-02:52:480
+1206
+306
+42
+172480
 夜がどんなにどんなに牙向いても
 No matter how much, how badly the night bares its fangs
-02:57:513
+1287
+228
+43
+177513
 正義の味方は涙はみせない
 Allies of Justice never show tears
-03:04:480
+1243
+250
+44
+184480
 アッ~
 AH~
-03:09:222
+773
+803
+45
+189222
 ホントはみせない...
 They never show them...
-03:16:868
+1243
+335
+46
+196868
 ホッ~
 HO~
-03:21:513
+930
+902
+47
+201513
 時々、みせない...
 Usually never  show them...
-03:29:255
+1292
+334
+48
+209255
 ハクション！
 A-ACHOO！
+1237
+551

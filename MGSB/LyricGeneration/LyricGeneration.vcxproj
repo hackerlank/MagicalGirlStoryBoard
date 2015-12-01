@@ -71,6 +71,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shared\LyricInfoManager.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>

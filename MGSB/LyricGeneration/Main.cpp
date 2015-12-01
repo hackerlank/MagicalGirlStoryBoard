@@ -29,7 +29,7 @@ int generateFontSize(int width, sf::Font font, std::wstring text, int fontSize =
 	sf::Text test(sf::String(text), font, fontSize);
 	
 	while (ceil(test.getLocalBounds().width) < width &&
-		   ceil(test.getLocalBounds().height) < TARGET_HEIGHT / 2) { // Set general height limit
+		   ceil(test.getLocalBounds().height) < TARGET_HEIGHT / 4) { // Set general height limit
 		test.setCharacterSize(++fontSize);
 	}
 
@@ -75,7 +75,7 @@ sf::Vector2u generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize,
 	double percent = base + variance;
 	int middleSpace = (int) (TARGET_HEIGHT * percent);
 	int imageHeight = kanjiHeight + middleSpace + englishHeight;
-	int imageWidth = kanjiWidth;
+	int imageWidth = std::max(kanjiWidth, englishWidth);
 	 
 	sf::RenderTexture render;
 	render.create(imageWidth, imageHeight);
@@ -164,7 +164,7 @@ int main(int argc, char* argv[]) {
 		lyricInfos.push_back(lyricInfo);
 	}
 
-	std::string destinationPath("Lyrics\\LyricInfo.txt");
+	std::string destinationPath("Lyrics\\lyricsInfo.txt");
 	LyricInfoManager::Instance()->Write(lyricInfos, destinationPath);
 
 	std::cout << "Lyric generation complete" << std::endl;

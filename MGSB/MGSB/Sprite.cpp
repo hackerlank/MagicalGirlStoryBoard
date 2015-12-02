@@ -2,12 +2,12 @@
 #include "Storyboard.hpp"
 #include <sstream>
 
-Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, Layer layer, Origin origin)
-	: layer(layer), origin(origin), filePath(filePath), position(position), size(size) {
-  double width = sprite.size.x * sprite.scale;
-  double height = sprite.size.y * sprite.scale;
-  radius = sqrt(width * width + height * height);
-		
+Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, double scale, Layer layer, Origin origin)
+	: layer(layer), origin(origin), filePath(filePath), position(position), size(size), scale(scale) {
+	double width = size.x * scale;
+	double height = size.y * scale;
+	radius = sqrt(width * width + height * height);
+
 	Storyboard::Instance()->sprites.push_back(*this);
 }
 

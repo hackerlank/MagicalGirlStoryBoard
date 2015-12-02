@@ -80,11 +80,9 @@
   <ItemGroup>
     <ClInclude Include="LyricInfo.hpp" />
     <ClInclude Include="LyricInfoManager.hpp" />
-    <ClInclude Include="Vector2.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LyricInfoManager.cpp" />
-    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

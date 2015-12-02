@@ -5,8 +5,8 @@
 #include "LyricInfoManager.cpp"
 #include <vector>
 #include <time.h>
-
-
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 int main() {
 	srand(time(NULL));
@@ -19,50 +19,58 @@ int main() {
 	for (int i = 0; i < lyricInfos.size(); ++i) {
 		std::string path = lyricPath + std::to_string(lyricInfos[i].id);
 		Vector2 size(lyricInfos[i].width, lyricInfos[i].height);
-		Sprite sprite = Sprite(path, size, mid);
+		Sprite sprite = Sprite(path, size, mid, scale);
 		sprite.Scale(0, ending, scale, scale);
 		sprite.Fade(lyricInfos[i].timing - 500, lyricInfos[i].timing, 0.0, 1.0);
 
-		bool foundMatch = false;
-		
-		while (!foundMatch) {
-		  double degrees = rand() % 360;
-		  double rotation = degrees * M_PI / 180.0;
-		  Vector2 direction(cos(rotatoin), sin(rotation));
-		  Sprite previous = Storyboard::Instance()->sprites[i-1];
-		  double diameter = sprite.radius + previous.radius;
-		  direction *= diameter;
-		  Vector2 distance = mid - direction;		  
-
-		  foundMatch = true;
-		  for (int j = i - 2; j >= 0; --j) {
-		    Sprite old = Storyboard::Instance()->sprites[j];
-		    Vector2 pos = old.pos;
-		    pos += distance;
-		    Vector2 difference = sprite.pos - pos;
-		    if (difference - old.radius < radius) {
-		      foundMatch = false;
-		      break;
-		    }
-		  }
-		  
-		  if (foundMatch) {
-		    int iterations = 20;
-		    for (int j = i - 1; j >= 0; --j) {
-		      for (int k = 0; k < iterations; ++k) {
-			
-		      }
-		    }
-		  }
-		}
-
-		double base = 0.4;
-		double variance = rand() % 20 / 100.0;
 		if (i < lyricInfos.size() - 1) {
-			base = 0.4;
-			variance = rand() % 20 / 100.0;
+			double base = 0.4;
+			double variance = rand() % 20 / 100.0;
 			double fade = base + variance;
 			sprite.Fade(lyricInfos[i + 1].timing - 500, lyricInfos[i].timing, 1.0, fade);
+		}
+
+		if (i == 0) {
+			continue;
+		}
+
+		bool foundMatch = false;
+		Sprite previous = Storyboard::Instance()->sprites[i - 1];
+		double diameter = sprite.radius + previous.radius;
+
+		while (!foundMatch) {
+			double degrees = rand() % 360;
+			double radians = degrees * M_PI / 180.0;
+			Vector2 move(cos(radians), sin(radians));
+			move *= diameter;
+			Vector2 distance = mid - move;
+
+			// Spherical collisions by comparing vectors
+			for (int j = i - 2; j >= 0; --j) {
+				Sprite old = Storyboard::Instance()->sprites[j];
+				Vector2 pos = old.position;
+				pos += distance;
+				Vector2 difference = sprite.position - pos;
+				if (difference.magnitude() - old.radius < sprite.radius) {
+					break;
+				}
+				else if (j == 0) {
+					foundMatch = true;
+				}
+			}
+
+			if (foundMatch) {
+				degrees = rand() % 360;
+				double rotation = degrees * M_PI / 180.0;
+				// More non-jaggedy movements, we create a bunch of iterative
+				// movements in between start and ending
+				int iterations = 100;
+				for (int j = i - 1; j >= 0; --j) {
+					for (int k = 0; k < iterations; ++k) {
+
+					}
+				}
+			}
 		}
 	}
 

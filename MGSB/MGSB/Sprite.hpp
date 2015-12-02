@@ -26,6 +26,7 @@ public:
 	double scale;
 	Color color;
 	Vector2 size;
+  double radius;
 private:
 	Layer layer;
 	Origin origin;

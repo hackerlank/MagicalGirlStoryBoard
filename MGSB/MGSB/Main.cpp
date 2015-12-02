@@ -6,6 +6,8 @@
 #include <vector>
 #include <time.h>
 
+
+
 int main() {
 	srand(time(NULL));
 	std::string lyricPath("..\\LyricGeneration\\Lyrics");
@@ -21,18 +23,38 @@ int main() {
 		sprite.Scale(0, ending, scale, scale);
 		sprite.Fade(lyricInfos[i].timing - 500, lyricInfos[i].timing, 0.0, 1.0);
 
-		double width = sprite.size.x * sprite.scale / 2.0;
-		double diameter;
-
-		// Move all the ones in the back
-		// Find distance to move
-		// Choose random direction
-		// 
-		for (int j = i - 1; j >= 0; --j) {
-			
-		}
-
+		bool foundMatch = false;
 		
+		while (!foundMatch) {
+		  double degrees = rand() % 360;
+		  double rotation = degrees * M_PI / 180.0;
+		  Vector2 direction(cos(rotatoin), sin(rotation));
+		  Sprite previous = Storyboard::Instance()->sprites[i-1];
+		  double diameter = sprite.radius + previous.radius;
+		  direction *= diameter;
+		  Vector2 distance = mid - direction;		  
+
+		  foundMatch = true;
+		  for (int j = i - 2; j >= 0; --j) {
+		    Sprite old = Storyboard::Instance()->sprites[j];
+		    Vector2 pos = old.pos;
+		    pos += distance;
+		    Vector2 difference = sprite.pos - pos;
+		    if (difference - old.radius < radius) {
+		      foundMatch = false;
+		      break;
+		    }
+		  }
+		  
+		  if (foundMatch) {
+		    int iterations = 20;
+		    for (int j = i - 1; j >= 0; --j) {
+		      for (int k = 0; k < iterations; ++k) {
+			
+		      }
+		    }
+		  }
+		}
 
 		double base = 0.4;
 		double variance = rand() % 20 / 100.0;

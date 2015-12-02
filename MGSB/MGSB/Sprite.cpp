@@ -4,6 +4,10 @@
 
 Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, Layer layer, Origin origin)
 	: layer(layer), origin(origin), filePath(filePath), position(position), size(size) {
+  double width = sprite.size.x * sprite.scale;
+  double height = sprite.size.y * sprite.scale;
+  radius = sqrt(width * width + height * height);
+		
 	Storyboard::Instance()->sprites.push_back(*this);
 }
 

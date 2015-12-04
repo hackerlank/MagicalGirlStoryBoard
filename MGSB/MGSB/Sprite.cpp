@@ -4,6 +4,7 @@
 
 Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, double scale, Layer layer, Origin origin)
 	: layer(layer), origin(origin), filePath(filePath), position(position), size(size), scale(scale) {
+	double rotation = 0;
 	double width = size.x * scale;
 	double height = size.y * scale;
 	radius = sqrt(width * width + height * height);

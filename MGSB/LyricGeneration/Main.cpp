@@ -7,7 +7,6 @@
 #include <locale>
 #include <codecvt>
 #include "LyricInfoManager.hpp"
-#include "Vector2.hpp"
 
 int TARGET_WIDTH = 800 * 2;
 int TARGET_HEIGHT = 600 * 2;

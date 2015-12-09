@@ -4,12 +4,12 @@
 
 Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, double scale, Layer layer, Origin origin)
 	: layer(layer), origin(origin), filePath(filePath), position(position), size(size), scale(scale) {
-	double rotation = 0;
+	this->rotation = 0.0;
 	double width = size.x * scale;
 	double height = size.y * scale;
 	radius = sqrt(width * width + height * height);
 
-	Storyboard::Instance()->sprites.push_back(*this);
+	Storyboard::Instance()->sprites.push_back(this);
 }
 
 // _M,<easing>,<starttime>,<endtime>,<start_x>,<start_y>,<end_x>,<end_y>
@@ -17,7 +17,7 @@ void Sprite::Move(int startTime, int endTime, int startX, int startY, int endX, 
 	position.x = endX;
 	position.y = endY;
 	std::ostringstream command;
-	command << "_M," << Layers[easing] << "," << startTime << "," << endTime << "," << startX << "," << startY << "," << endX << "," << endY;
+	command << "_M," << easing << "," << startTime << "," << endTime << "," << startX << "," << startY << "," << endX << "," << endY;
 	commands.push_back(command.str());
 }
 
@@ -25,7 +25,7 @@ void Sprite::Move(int startTime, int endTime, int startX, int startY, int endX, 
 void Sprite::Fade(int startTime, int endTime, double startOpacity, double endOpacity, Easing easing) {
 	fade = endOpacity;
 	std::ostringstream command;
-	command << "_F," << Layers[easing] << "," << startTime << "," << endTime << "," << startOpacity << "," << endOpacity;
+	command << "_F," << easing << "," << startTime << "," << endTime << "," << startOpacity << "," << endOpacity;
 	commands.push_back(command.str());
 }
 
@@ -33,7 +33,7 @@ void Sprite::Fade(int startTime, int endTime, double startOpacity, double endOpa
 void Sprite::Rotate(int startTime, int endTime, double startRotate, double endRotate, Easing easing) {
 	rotation = endRotate;
 	std::ostringstream command;
-	command << "_R," << Layers[easing] << "," << startTime << "," << endTime << "," << startRotate << "," << endRotate;
+	command << "_R," << easing << "," << startTime << "," << endTime << "," << startRotate << "," << endRotate;
 	commands.push_back(command.str());
 }
 
@@ -41,20 +41,20 @@ void Sprite::Rotate(int startTime, int endTime, double startRotate, double endRo
 void Sprite::Scale(int startTime, int endTime, double startScale, double endScale, Easing easing) {
 	scale = endScale;
 	std::ostringstream command;
-	command << "_S," << Layers[easing] << "," << startTime << "," << endTime << "," << startScale << "," << endScale;
+	command << "_S," << easing << "," << startTime << "," << endTime << "," << startScale << "," << endScale;
 	commands.push_back(command.str());
 }
 
 // _C,<easing>,<starttime>,<endtime>,<start_r>,<start_g>,<start_b>,<end_r>,<end_g>,<end_b>
 void Sprite::Color(int startTime, int endTime, int startR, int startG, int startB, int endR, int endG, int endB, Easing easing) {
 	std::ostringstream command;
-	command << "_C," << Layers[easing] << "," << startTime << "," << endTime << "," << startR << "," << startG << "," << startB << "," << endR << "," << endG << "," << endB;
+	command << "_C," << easing << "," << startTime << "," << endTime << "," << startR << "," << startG << "," << startB << "," << endR << "," << endG << "," << endB;
 	commands.push_back(command.str());
 }
 
 void Sprite::Write(std::ofstream& outputFile) {
 	// Sprite,<layer>,<origin>,"<filepath>",<x>,<y>
-	outputFile << "Sprite," << Layers[layer] << "," << Origins[origin] << "," << filePath << "," << position.x << "," << position.y << std::endl;;
+	outputFile << "Sprite," << Layers[layer] << "," << Origins[origin] << ",\"" << filePath << "\"," << position.x << "," << position.y << std::endl;;
 	for (auto command : commands) {
 		outputFile << command << std::endl;
 	}

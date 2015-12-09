@@ -19,7 +19,9 @@ void Storyboard::Write(const std::string& destinationPath="") {
 
 	outputFile << "[Events]" << std::endl;
 	for (auto sprite : sprites) {
-		sprite.Write(outputFile);
+		sprite->Write(outputFile);
 	}
+
+	outputFile << "//Storyboard Sound Samples" << std::endl;
 	outputFile.close();
 }

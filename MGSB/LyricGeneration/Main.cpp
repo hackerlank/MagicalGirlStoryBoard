@@ -68,11 +68,7 @@ sf::Vector2u generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize,
 	int englishHeight = (int) ceil(englishRect.height + englishRect.top);
 
 	// Space between kanji and english
-	// 5-10% of height
-	double base = 0.05;
-	double variance = rand() % 5 / 100.0;
-	double percent = base + variance;
-	int middleSpace = (int) (TARGET_HEIGHT * percent);
+	int middleSpace = (int) (TARGET_HEIGHT * 0.05);
 	int imageHeight = kanjiHeight + middleSpace + englishHeight;
 	int imageWidth = std::max(kanjiWidth, englishWidth);
 	 
@@ -124,6 +120,7 @@ int main(int argc, char* argv[]) {
 	std::wstring line;
 	sf::Font prevFont;
 	std::vector<LyricInfo> lyricInfos;
+	std::string basePath = R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)";
 
 	for (int i = 0; std::getline(file, line); i++) {
 		std::wcout << "Processing Line " << i << ": " << line << std::endl;
@@ -148,7 +145,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		int id = i;
-		std::string destinationPath("Lyrics\\" + std::to_string(i) + ".png");
+		std::string destinationPath(basePath + std::to_string(i) + ".png");
 		std::cout << "Generating image" << std::endl;
 		sf::Vector2u renderSize = generateImage(font, kanji, kanjiFontSize, english, englishFontSize, destinationPath);
 		std::cout << "Generating image complete" << std::endl;
@@ -163,7 +160,7 @@ int main(int argc, char* argv[]) {
 		lyricInfos.push_back(lyricInfo);
 	}
 
-	std::string destinationPath("Lyrics\\lyricsInfo.txt");
+	std::string destinationPath(basePath + "lyricsInfo.txt");
 	LyricInfoManager::Instance()->Write(lyricInfos, destinationPath);
 
 	std::cout << "Lyric generation complete" << std::endl;

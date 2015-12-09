@@ -13,7 +13,7 @@ int main() {
 	std::string lyricPath(R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)");
 	std::vector<LyricInfo> lyricInfos = LyricInfoManager::Instance()->Read(lyricPath + "lyricsInfo.txt");
 	int ending = 213513;
-	double scale = 0.4;
+	double scale = 0.03;
 	Vector2 mid(320, 240);
 	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
 
@@ -77,9 +77,8 @@ int main() {
 			// If collisions are fine, then move everything
 			if (foundMatch) {
 				std::wcout << "Found Match" << std::endl;
-				// Second rotation to account for a rotation of the new sprite
-				// -10 to 10 degrees
-				degrees = rand() % 20 - 10;
+				// Second rotation that rotates everything around center
+				degrees = rand() % 90 - 45;
 				double rotation = degrees * M_PI / 180.0;
 				// int iterations = 100;
 				int endTime = lyricInfos[i].timing;
@@ -87,25 +86,16 @@ int main() {
 				
 				for (int j = i - 1; j >= 0; --j) {
 					Sprite* old = Storyboard::Instance()->sprites[j];
-					old->Rotate(startTime, endTime, old->rotation, rotation);
+					old->Rotate(startTime, endTime, old->rotation, old->rotation + rotation);
 
 					Vector2 movePos = old->position + move;
 					Vector2 fromMid = mid - movePos;
-					Vector2 endMove(cos(rotation), sin(rotation));
+					// Find angle from unit vector
+					// Need to calculate angle with dot
+					Vector2 endMove(cos(old->rotation), sin(old->rotation)); // wrong
 					endMove *= fromMid.magnitude();
+					endMove = mid + endMove;
 					old->Move(startTime, endTime, old->position.x, old->position.y, endMove.x, endMove.y);
-
-					// Not sure if I have to account for smoother iterations
-					// Started on some code that may not be necessary
-					//for (int k = 0; k < iterations; ++k) {
-					//	double startRotation = k * (rotation / iterations);
-					//	double endRotation = (k + 1) * (rotation / iterations);
-					//	Vector2 startMove = old.position;
-					//	Vector2 endMove(cos(endRotation), sin(endRotation));
-					//	Vector2 previousMove = move * k / iterations;
-					//	Vector2 previousPos = startMove - endMove * k 
-					//	old.Move(startTime, endTime, startMove.x, startMove.y, endMove.x, endMove.y);
-					//}
 				}
 			}
 		}

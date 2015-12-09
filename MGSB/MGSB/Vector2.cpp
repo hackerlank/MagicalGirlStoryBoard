@@ -13,11 +13,20 @@ Vector2 Vector2::normalize() {
 	return Vector2(x / mag, y / mag);
 }
 
-Vector2 Vector2::operator+(const Vector2& v) {
+double Vector2::dot(Vector2 v) {
+	return x * v.x + y * v.y;
+}
+
+double Vector2::angleBetween(Vector2 v) {
+	double dotProd = this->dot(v);
+	return acos(dotProd / this->magnitude() * v.magnitude());
+}
+
+Vector2 Vector2::operator+(Vector2 v) {
 	return Vector2(x + v.x, y + v.y);
 }
 
-Vector2 Vector2::operator-(const Vector2& v) {
+Vector2 Vector2::operator-(Vector2 v) {
 	return Vector2(x - v.x, y - v.y);
 }
 
@@ -29,12 +38,12 @@ Vector2 Vector2::operator/(double division) {
 	return Vector2(x / division, y / division);
 }
 
-void Vector2::operator+=(const Vector2& v) {
+void Vector2::operator+=(Vector2 v) {
 	x += v.x;
 	y += v.y;
 }
 
-void Vector2::operator-=(const Vector2& v) {
+void Vector2::operator-=(Vector2 v) {
 	x -= v.x;
 	y -= v.y;
 }

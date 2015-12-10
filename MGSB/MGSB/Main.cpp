@@ -13,7 +13,7 @@ int main() {
 	std::string lyricPath(R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)");
 	std::vector<LyricInfo> lyricInfos = LyricInfoManager::Instance()->Read(lyricPath + "lyricsInfo.txt");
 	int ending = 213513;
-	double scale = 0.03;
+	double scale = 0.3;
 	Vector2 mid(320, 240);
 	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
 
@@ -86,16 +86,22 @@ int main() {
 				
 				for (int j = i - 1; j >= 0; --j) {
 					Sprite* old = Storyboard::Instance()->sprites[j];
-					old->Rotate(startTime, endTime, old->rotation, old->rotation + rotation);
 
 					Vector2 movePos = old->position + move;
-					Vector2 fromMid = mid - movePos;
-					// Find angle from unit vector
-					// Need to calculate angle with dot
-					Vector2 endMove(cos(old->rotation), sin(old->rotation)); // wrong
+					Vector2 fromMid = movePos - mid;
+
+					Vector2 unitVec(1,0);
+					double angleFrom0 = fromMid.angleBetween(unitVec);
+					if (fromMid.y < 0.0) {
+						angleFrom0 *= -1.0;
+					}
+					angleFrom0 += rotation;
+					Vector2 endMove(cos(angleFrom0), sin(angleFrom0));
 					endMove *= fromMid.magnitude();
 					endMove = mid + endMove;
 					old->Move(startTime, endTime, old->position.x, old->position.y, endMove.x, endMove.y);
+
+					old->Rotate(startTime, endTime, old->rotation, old->rotation + rotation);
 				}
 			}
 		}
@@ -107,6 +113,7 @@ int main() {
 
 	Sprite* sprite = new Sprite("blank.png", mid, Vector2(1366, 768), 1.0, Layer::Background);
 	sprite->Color(0, ending, 0, 0, 0, 0, 0, 0);
+	sprite->Fade(-500, 0, 0.0, 1.0);
 	sprite->Fade(ending, ending + 500, 1.0, 0.0);
 	
 
@@ -120,6 +127,9 @@ int main() {
 	for (auto sprite : Storyboard::Instance()->sprites) {
 		delete sprite;
 	}
+
+	//std::cout << "Storyboard generation complete" << std::endl;
+	//std::cin.get();
 
 	return 0;
 }

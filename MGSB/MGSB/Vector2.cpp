@@ -19,7 +19,8 @@ double Vector2::dot(Vector2 v) {
 
 double Vector2::angleBetween(Vector2 v) {
 	double dotProd = this->dot(v);
-	return acos(dotProd / this->magnitude() * v.magnitude());
+	dotProd /= this->magnitude() * v.magnitude();
+	return acos(dotProd);
 }
 
 Vector2 Vector2::operator+(Vector2 v) {

@@ -58,6 +58,7 @@ bool collision(Sprite* base, Sprite* s, double rotation = 0.0) {
 		// Point-slope form
 		// Compares to left boundary
 		double yIntercept = slope * (leftBoundary - p1.x) + p1.y;
+		// Indicates collision if the intercept is between top and bottom of r1
 		if (yIntercept < topBoundary && yIntercept > bottomBoundary) {
 			return true;
 		}
@@ -126,9 +127,10 @@ int main() {
 			int endTime = lyricInfos[i].timing;
 			int startTime = endTime - 500;
 
-			// Find distance to move previous sprite
+			// Find distance to move previous sprite, push out
 
 			// Check if all previous collisions are fine
+			// Replace below
 			// Spherical collisions by comparing vectors
 			for (int j = i - 1; j >= 0; --j) {
 				Sprite* old = Storyboard::Instance()->sprites[j];

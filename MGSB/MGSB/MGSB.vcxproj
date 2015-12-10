@@ -81,17 +81,21 @@
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Origin.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Storyboard.cpp" />
     <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="Vector2Pair.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Easing.hpp" />
     <ClInclude Include="Layer.hpp" />
     <ClInclude Include="Origin.hpp" />
+    <ClInclude Include="Rectangle.hpp" />
     <ClInclude Include="Sprite.hpp" />
     <ClInclude Include="Storyboard.hpp" />
     <ClInclude Include="Vector2.hpp" />
+    <ClInclude Include="Vector2Pair.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

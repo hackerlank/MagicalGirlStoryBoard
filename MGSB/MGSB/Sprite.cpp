@@ -3,12 +3,7 @@
 #include <sstream>
 
 Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, double scale, Layer layer, Origin origin)
-	: layer(layer), origin(origin), filePath(filePath), position(position), size(size), scale(scale) {
-	this->rotation = 0.0;
-	double halfWidth = size.x * scale / 2;
-	double halfHeight = size.y * scale / 2;
-	radius = sqrt(halfWidth * halfWidth + halfHeight * halfHeight);
-
+	: layer(layer), origin(origin), filePath(filePath), scale(scale), position(position), size(size * scale), rotation(0.0) {
 	Storyboard::Instance()->sprites.push_back(this);
 }
 

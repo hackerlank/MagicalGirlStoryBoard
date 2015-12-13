@@ -4,23 +4,44 @@
 Vector2::Vector2(double x, double y)
 	: x(x), y(y) {}
 
-double Vector2::magnitude() {
+double Vector2::Magnitude() {
 	return sqrt(x * x + y * y);
 }
 
-Vector2 Vector2::normalize() {
-	double mag = magnitude();
+Vector2 Vector2::Normalize() {
+	double mag = Magnitude();
 	return Vector2(x / mag, y / mag);
 }
 
-double Vector2::dot(Vector2 v) {
+double Vector2::Dot(Vector2 v) {
 	return x * v.x + y * v.y;
 }
 
-double Vector2::angleBetween(Vector2 v) {
-	double dotProd = this->dot(v);
-	dotProd /= this->magnitude() * v.magnitude();
-	return acos(dotProd);
+double Vector2::AngleBetween(Vector2 v) {
+	if (this->Magnitude() == 0 || v.Magnitude() == 0) {
+		return 0;
+	}
+	else {
+		double dotProd = this->Dot(v);
+		dotProd /= this->Magnitude() * v.Magnitude();
+		return acos(dotProd);
+	}
+}
+
+Vector2 Vector2::RotateAround(Vector2 origin, double rotation) {
+	Vector2 fromMid = *this - origin;
+	Vector2 unitVec(1, 0);
+	double angleFrom0 = fromMid.AngleBetween(unitVec);
+	if (fromMid.y < 0) {
+		angleFrom0 *= -1;
+	}
+	angleFrom0 += rotation;
+	Vector2 endMove(cos(angleFrom0), sin(angleFrom0));
+	endMove *= fromMid.Magnitude();
+	endMove = origin + endMove;
+
+	*this = endMove;
+	return endMove;
 }
 
 Vector2 Vector2::operator+(Vector2 v) {

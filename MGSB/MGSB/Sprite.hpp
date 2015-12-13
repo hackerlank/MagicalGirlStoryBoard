@@ -22,11 +22,10 @@ public:
 
 	double fade;
 	Vector2 position;
+	Vector2 size;
 	double rotation;
 	double scale;
 	//Color color;
-	Vector2 size;
-	double radius;
 private:
 	Layer layer;
 	Origin origin;

@@ -4,10 +4,13 @@
 class Vector2 {
 public:
 	Vector2(double x = 0.0, double y = 0.0);
-	double magnitude();
-	Vector2 normalize();
-	double dot(Vector2 v);
-	double angleBetween(Vector2 v);
+	double Magnitude();
+	Vector2 Normalize();
+	double Dot(Vector2 v);
+	double AngleBetween(Vector2 v);
+
+	// Rotates around a specified point
+	Vector2 RotateAround(Vector2 origin, double rotation);
 	Vector2 operator+(Vector2 v);
 	Vector2 operator-(Vector2 v);
 	Vector2 operator*(double multiple);

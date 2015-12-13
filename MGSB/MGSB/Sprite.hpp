@@ -25,6 +25,7 @@ public:
 	Vector2 size;
 	double rotation;
 	double scale;
+	double radius;
 	//Color color;
 private:
 	Layer layer;

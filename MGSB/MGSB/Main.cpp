@@ -12,11 +12,9 @@
 // Checks if two sprites collide with each other
 // By the nature of this project, s1 is always upright and located at 320,240
 bool collision(Sprite s1, Sprite s2) {
-	// Quick check that also removes some cross cases
-	double diff = (s1.position - s2.position).Magnitude();
-	if (diff < fmin(fmin(s1.size.x, s1.size.y),
-		fmin(s2.size.x, s2.size.y))) {
-		return true;
+	// Performs a quick check comparing radii
+	if ((s1.position - s2.position).Magnitude() > s1.radius + s2.radius) {
+		return false;
 	}
 
 	// Move everything to (0,0)
@@ -24,58 +22,67 @@ bool collision(Sprite s1, Sprite s2) {
 	s1.position -= translate;
 	s2.position -= translate;
 
-	// Calculate four corners of s2
-	double halfWidth = s2.size.x / 2;
-	Vector2 right(cos(s2.rotation) * halfWidth, sin(s2.rotation) * halfWidth);
-	Vector2 left = right * -1;
-	double halfHeight = s2.size.y / 2;
-	Vector2 up(cos(s2.rotation + M_PI / 2) * halfHeight, sin(s2.rotation + M_PI / 2) * halfHeight);
-	Vector2 down = up * -1;
+	// Corners of s1
+	double halfWidth1 = s1.size.x / 2;
+	double halfHeight1 = s1.size.y / 2;
+	Vector2 TR1 = s1.position + Vector2(halfWidth1, halfHeight1);
+	Vector2 TL1 = s1.position + Vector2(-halfWidth1, halfHeight1);
+	Vector2 BR1 = s1.position + Vector2(halfWidth1, -halfHeight1);
+	Vector2 BL1 = s1.position + Vector2(-halfWidth1, -halfHeight1);
+	std::vector<Vector2> s1corners = { TR1, TL1, BR1, BL1 };
 
-	Vector2 TR = s2.position + right + up;
-	Vector2 TL = s2.position + left + up;
-	Vector2 BR = s2.position + right + down;
-	Vector2 BL = s2.position + left + down;
+	// Corners of s2
+	double halfWidth2 = s2.size.x / 2;
+	Vector2 right2(cos(s2.rotation) * halfWidth2, sin(s2.rotation) * halfWidth2);
+	Vector2 left2 = -right2;
+	double halfHeight2 = s2.size.y / 2;
+	Vector2 up2(cos(s2.rotation + M_PI / 2) * halfHeight2, sin(s2.rotation + M_PI / 2) * halfHeight2);
+	Vector2 down2 = -up2;
+	Vector2 TR2 = s2.position + right2 + up2;
+	Vector2 TL2 = s2.position + left2 + up2;
+	Vector2 BR2 = s2.position + right2 + down2;
+	Vector2 BL2 = s2.position + left2 + down2;
+	std::vector<Vector2> s2corners = { TR2, TL2, BR2, BL2 };
 
-	// Four lines
-	std::vector<Vector2Pair> lines;
-	lines.push_back(Vector2Pair(TR, TL));
-	lines.push_back(Vector2Pair(TR, BR));
-	lines.push_back(Vector2Pair(TL, BL));
-	lines.push_back(Vector2Pair(BL, BR));
+	// Axes
+	Vector2 axis1 = TR2 - TL2;
+	Vector2 axis2 = TR2 - BR2;
+	std::vector<Vector2> axes = { Vector2(1, 0), Vector2(0, 1), axis1, axis2 };
 
-	// Boundaries of s1
-	double topBoundary = s1.position.y + s1.size.y / 2;
-	double bottomBoundary = s1.position.y - s1.size.y / 2;
-	double leftBoundary = s1.position.x - s1.size.x / 2;
-	double rightBoundary = s1.position.x + s1.size.x / 2;
-
-	for (auto pair : lines) {
-		Vector2 p1 = pair.x;
-		Vector2 p2 = pair.y;
-
-		if ((p1.x < leftBoundary && p2.x < leftBoundary) ||
-			(p2.x > rightBoundary && p2.x > rightBoundary)) {
-			continue;
+	for (auto axis : axes) {
+		double min1 = s1corners[0].Dot(axis);
+		double max1 = s1corners[0].Dot(axis);
+		for (auto corner : s1corners) {
+			Vector2 projection = corner.Project(axis);
+			double scalar = projection.Dot(axis);
+			if (scalar < min1) {
+				min1 = scalar;
+			}
+			if (scalar > max1) {
+				max1 = scalar;
+			}
 		}
-
-		double slope = (p2.y - p1.y) / (p2.x - p1.x);
-
-		// Point-slope form
-		// Compares to left boundary
-		double yIntercept = slope * (leftBoundary - p1.x) + p1.y;
-		// Indicates collision if the intercept is between top and bottom of s1
-		if (yIntercept < topBoundary && yIntercept > bottomBoundary) {
-			return true;
+		
+		double min2 = s2corners[0].Dot(axis);
+		double max2 = s2corners[0].Dot(axis);
+		for (auto corner : s2corners) {
+			Vector2 projection = corner.Project(axis);
+			double scalar = projection.Dot(axis);
+			if (scalar < min2) {
+				min2 = scalar;
+			}
+			if (scalar > max2) {
+				max2 = scalar;
+			}
 		}
-
-		// Compares to right boundary
-		yIntercept = slope * (rightBoundary - p1.x) + p1.y;
-		if (yIntercept < topBoundary && yIntercept > bottomBoundary) {
-			return true;
+		
+		// Checks for no overlaps
+		if (min2 >= max1 || max2 <= min1) {
+			return false;
 		}
 	}
-	return false;
+
+	return true;
 }
 
 int main() {
@@ -83,7 +90,7 @@ int main() {
 	std::string lyricPath(R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)");
 	std::vector<LyricInfo> lyricInfos = LyricInfoManager::Instance()->Read(lyricPath + "lyricsInfo.txt");
 	int ending = 213513;
-	double scale = 0.3;
+	double scale = 0.4;
 	Vector2 mid(320, 240);
 	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
 
@@ -155,7 +162,7 @@ int main() {
 				Sprite old = *Storyboard::Instance()->sprites[j];
 
 				old.position += move;
-				old.position = old.position.RotateAround(mid, rotation);
+				old.position.RotateAround(mid, rotation);
 				old.rotation += rotation;
 
 				if (collision(s1, old)) {

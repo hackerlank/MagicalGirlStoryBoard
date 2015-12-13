@@ -28,7 +28,14 @@ double Vector2::AngleBetween(Vector2 v) {
 	}
 }
 
-Vector2 Vector2::RotateAround(Vector2 origin, double rotation) {
+Vector2 Vector2::Project(Vector2 axis) {
+	Vector2 projection = Vector2(this->Dot(axis), this->Dot(axis));
+	projection /= (axis.x * axis.x) + (axis.y * axis.y);
+	projection *= axis;
+	return projection;
+}
+
+void Vector2::RotateAround(Vector2 origin, double rotation) {
 	Vector2 fromMid = *this - origin;
 	Vector2 unitVec(1, 0);
 	double angleFrom0 = fromMid.AngleBetween(unitVec);
@@ -41,7 +48,10 @@ Vector2 Vector2::RotateAround(Vector2 origin, double rotation) {
 	endMove = origin + endMove;
 
 	*this = endMove;
-	return endMove;
+}
+
+Vector2 Vector2::operator-() {
+	return Vector2(-x, -y);
 }
 
 Vector2 Vector2::operator+(Vector2 v) {
@@ -54,6 +64,10 @@ Vector2 Vector2::operator-(Vector2 v) {
 
 Vector2 Vector2::operator*(double multiple) {
 	return Vector2(x * multiple, y * multiple);
+}
+
+Vector2 Vector2::operator*(Vector2 v) {
+	return Vector2(x * v.x, y * v.y);
 }
 
 Vector2 Vector2::operator/(double division) {
@@ -73,6 +87,11 @@ void Vector2::operator-=(Vector2 v) {
 void Vector2::operator*=(double multiple) {
 	x *= multiple;
 	y *= multiple;
+}
+
+void Vector2::operator*=(Vector2 v) {
+	x *= v.x;
+	y *= v.y;
 }
 
 void Vector2::operator/=(double division) {

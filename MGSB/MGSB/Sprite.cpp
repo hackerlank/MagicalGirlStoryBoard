@@ -5,6 +5,9 @@
 Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, double scale, Layer layer, Origin origin)
 	: layer(layer), origin(origin), filePath(filePath), scale(scale), position(position), size(size * scale), rotation(0.0) {
 	Storyboard::Instance()->sprites.push_back(this);
+	double halfWidth = size.x / 2;
+	double halfHeight = size.y / 2;
+	radius = sqrt(halfWidth * halfWidth + halfHeight * halfHeight);
 }
 
 // _M,<easing>,<starttime>,<endtime>,<start_x>,<start_y>,<end_x>,<end_y>

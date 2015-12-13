@@ -90,10 +90,12 @@ int main() {
 	std::string lyricPath(R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)");
 	std::vector<LyricInfo> lyricInfos = LyricInfoManager::Instance()->Read(lyricPath + "lyricsInfo.txt");
 	int ending = 213513;
-	double scale = 0.4;
+	double scale = 0.35;
 	Vector2 mid(320, 240);
 	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
 
+	// Controls which way to spin
+	bool leftSpin = true;
 	for (int i = 0; i < lyricInfos.size(); ++i) {
 		std::wcout << "Processing: " << lyricInfos[i].id << std::endl;
 		std::wcout << lyricInfos[i].kanji << std::endl;
@@ -104,7 +106,26 @@ int main() {
 		Sprite* sprite = new Sprite(path, mid, size, scale);
 		sprite->Scale(0, ending, scale, scale);
 
+		// Spin applied to base sprite
+		// -5 to 0 degrees;
+		double degrees = rand() % 5 - 5;
+		double spinStart = degrees * M_PI / 180.0;
+		// 5 to 10 degrees;
+		degrees = rand() % 5 + 5;
+		double spinAdd = degrees * M_PI / 180.0;
+		if (leftSpin) {
+			spinStart *= -1;
+			spinAdd *= -1;
+			leftSpin = false;
+		}
+		else {
+			leftSpin = true;
+		}
+		double spinEnd = spinStart + spinAdd;
+
 		if (i < lyricInfos.size() - 1) {
+			sprite->Rotate(lyricInfos[i].timing - 500, lyricInfos[i + 1].timing - 500, spinStart, spinEnd);
+
 			sprite->Fade(lyricInfos[i].timing - 500, lyricInfos[i].timing, 0.0, 1.0);
 			sprite->Fade(lyricInfos[i].timing, lyricInfos[i + 1].timing - 500, 1.0, 1.0);
 			// 30-70% opacity
@@ -115,7 +136,8 @@ int main() {
 		}
 
 		else {
-			sprite->Fade(lyricInfos[i].timing - 500, ending, 0.0, 1.0);
+			sprite->Rotate(lyricInfos[i].timing - 500, ending, spinStart, spinEnd);
+			sprite->Fade(lyricInfos[i].timing - 500, lyricInfos[i].timing, 0.0, 1.0);
 		}
 
 		// Ignore calculations for first lyric
@@ -128,15 +150,13 @@ int main() {
 		bool foundMatch = false;
 		while (!foundMatch) {
 			// First rotation to decide where to place
-			double degrees = rand() % 360;
+			degrees = rand() % 360;
 			double radians = degrees * M_PI / 180.0;
 			Vector2 move(cos(radians), sin(radians));
 
 			// Second rotation that rotates everything around center
 			degrees = rand() % 90 - 45;
 			double rotation = degrees * M_PI / 180.0;
-			int endTime = lyricInfos[i].timing;
-			int startTime = endTime - 500;
 
 			// Find distance to move previous sprite, push out
 			// Set distance as minimum of width and height
@@ -177,13 +197,28 @@ int main() {
 			if (foundMatch) {
 				std::wcout << "Found Match" << std::endl;
 
+				int lyricTime = lyricInfos[i].timing;
+				int startTime = lyricTime - 500;
+				int endTime;
+				if (i < lyricInfos.size() - 1) {
+					endTime = lyricInfos[i + 1].timing - 500;
+				}
+				else {
+					endTime = ending;
+				}
+
 				for (int j = i - 1; j >= 0; --j) {
 					Sprite* old = Storyboard::Instance()->sprites[j];
 
 					Vector2 endMove = old->position + move;
-					endMove.RotateAround(mid, rotation);
-					old->Move(startTime, endTime, old->position.x, old->position.y, endMove.x, endMove.y);
-					old->Rotate(startTime, endTime, old->rotation, old->rotation + rotation);
+					endMove.RotateAround(mid, rotation + spinStart);
+					old->Move(startTime, lyricTime, old->position.x, old->position.y, endMove.x, endMove.y);
+					old->Rotate(startTime, lyricTime, old->rotation, old->rotation + rotation + spinStart);
+
+					endMove = old->position;
+					endMove.RotateAround(mid, spinAdd);
+					old->Move(lyricTime, endTime, old->position.x, old->position.y, endMove.x, endMove.y);
+					old->Rotate(lyricTime, endTime, old->rotation, old->rotation + spinAdd);
 				}
 			}
 		}
@@ -197,7 +232,6 @@ int main() {
 	sprite->Color(0, ending, 0, 0, 0, 0, 0, 0);
 	sprite->Fade(-500, 0, 0.0, 1.0);
 	sprite->Fade(ending, ending + 500, 1.0, 0.0);
-
 
 	std::string destinationPath = R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\)"
 		R"(367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\)"

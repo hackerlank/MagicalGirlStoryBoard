@@ -3,7 +3,7 @@
 #include <sstream>
 
 Sprite::Sprite(const std::string& filePath, Vector2 position, Vector2 size, double scale, Layer layer, Origin origin)
-	: layer(layer), origin(origin), filePath(filePath), scale(scale), position(position), size(size * scale), rotation(0.0) {
+	: layer(layer), origin(origin), filePath(filePath), scale(scale), position(position), size(size * scale), rotation(0.0), color(Color::Color(0,0,0)) {
 	Storyboard::Instance()->sprites.push_back(this);
 	double halfWidth = size.x / 2;
 	double halfHeight = size.y / 2;
@@ -45,6 +45,7 @@ void Sprite::Scale(int startTime, int endTime, double startScale, double endScal
 
 // _C,<easing>,<starttime>,<endtime>,<start_r>,<start_g>,<start_b>,<end_r>,<end_g>,<end_b>
 void Sprite::Color(int startTime, int endTime, int startR, int startG, int startB, int endR, int endG, int endB, Easing easing) {
+	color = Color::Color(endR, endG, endB);
 	std::ostringstream command;
 	command << "_C," << easing << "," << startTime << "," << endTime << "," << startR << "," << startG << "," << startB << "," << endR << "," << endG << "," << endB;
 	commands.push_back(command.str());

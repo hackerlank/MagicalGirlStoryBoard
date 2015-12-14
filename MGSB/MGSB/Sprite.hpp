@@ -8,9 +8,13 @@
 #include "Vector2.hpp"
 #include "Easing.hpp"
 #include <fstream>
+#include "Color.hpp"
 
 class Sprite {
 public:
+	// Conflicts with below function
+	Color color;
+
 	Sprite(const std::string& filePath, Vector2 position, Vector2 size, double scale = 1.0, Layer layer = Layer::Foreground, Origin origin = Origin::Centre);
 	void Move(int startTime, int endTime, int startX, int startY, int endX, int endY, Easing easing = Easing::Linear);
 	void Fade(int startTime, int endTime, double startOpacity, double endOpacity, Easing easing = Easing::Linear);
@@ -26,7 +30,6 @@ public:
 	double rotation;
 	double scale;
 	double radius;
-	//Color color;
 private:
 	Layer layer;
 	Origin origin;

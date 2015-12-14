@@ -87,30 +87,98 @@ bool collision(Sprite s1, Sprite s2) {
 
 int main() {
 	srand(time(NULL));
-	std::string lyricPath(R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)");
-	std::vector<LyricInfo> lyricInfos = LyricInfoManager::Instance()->Read(lyricPath + "lyricsInfo.txt");
-	int ending = 213513;
-	double scale = 0.35;
-	double squeeze = scale * 0.97;
-	Vector2 mid(320, 240);
 	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
-	// Controls which way to spin
-	bool leftSpin = true;
+	
+	Vector2 mid(320, 240);
+	int ending = 213513;
 	// Millisecond per beat
 	double mspb = 60000.0 / 155;
+
+	std::string lyricPath(R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)");
+	std::vector<LyricInfo> lyricInfos = LyricInfoManager::Instance()->Read(lyricPath + "lyricsInfo.txt");
+
+	// Handle background
+	Sprite* background = new Sprite("blank.png", mid, Vector2(1366, 768), 1.0, Layer::Background);
+	Color backgroundColor = Colors[rand() % Colors.size()];
+	while (backgroundColor == Color(0, 0, 0)) {
+		backgroundColor = Colors[rand() % Colors.size()];
+	}
+	background->Fade(-mspb * 1.5, 0, 0.0, 1.0);
+	background->Fade(ending, ending + mspb * 1.5, 1.0, 0.0);
+	background->Color(-mspb * 1.5, lyricInfos.front().timing - mspb * 1.5, backgroundColor.r, backgroundColor.g, backgroundColor.b, 
+																	       backgroundColor.r, backgroundColor.g, backgroundColor.b);
+
+	// Swirl
+	Sprite* swirl = new Sprite("swirl.png", mid, Vector2(0, 0), 1.0, Layer::Background);
+	Color swirlColor = Colors[rand() % Colors.size()];
+	while (swirlColor == backgroundColor || swirlColor == Color(255, 255, 255)) {
+		swirlColor = Colors[rand() % Colors.size()];
+	}
+	double swirlScale = 0.20;
+	double startSwirl = 6800;
+	double endSwirl = lyricInfos.back().timing;
+	double fadeSwirl = 0.25;
+	swirl->Scale(0, ending, swirlScale, swirlScale);
+	swirl->Move(startSwirl, ending, mid.x, mid.y, mid.x, mid.y);
+	swirl->Fade(startSwirl - mspb * 1.5, startSwirl, 0.0, fadeSwirl);
+	swirl->Fade(endSwirl, endSwirl + mspb * 1.5, fadeSwirl, 0.0);
+	swirl->Color(0, lyricInfos.front().timing - mspb * 1.5, swirlColor.r, swirlColor.g, swirlColor.b,
+															swirlColor.r, swirlColor.g, swirlColor.b);
+	double swirlLength = endSwirl - startSwirl + 3 * mspb;
+	double swirlRate = mspb * 8;
+	double swirls = 360 * swirlLength / swirlRate;
+	swirls *= M_PI;
+	swirls /= 180.0;
+	swirl->Rotate(startSwirl - mspb * 1.5, endSwirl + mspb * 1.5, 0, swirls);
+
+	// Handle lyrics
+	std::vector<Sprite*> lyrics;
+	double scale = 0.4;
+	double squeeze = scale * 0.98;
+	// Controls which way to spin
+	bool leftSpin = true;
 
 	for (int i = 0; i < lyricInfos.size(); ++i) {
 		std::wcout << "Processing: " << lyricInfos[i].id << std::endl;
 		std::wcout << lyricInfos[i].kanji << std::endl;
 		std::wcout << lyricInfos[i].english << std::endl;
-
+		
 		std::string path = "Lyrics/" + std::to_string(lyricInfos[i].id) + ".png";
 		Vector2 size(lyricInfos[i].width, lyricInfos[i].height);
 		Sprite* sprite = new Sprite(path, mid, size, scale);
-		sprite->Scale(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, scale * 0.75, scale);
+		lyrics.push_back(sprite);
 
+		// Initital scale
+		sprite->Scale(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, scale * 0.75, scale);
 		// For choosing when to squeeze or use normal scale
 		bool offBeat = false;
+
+		// Assign colors
+		Sprite* previous;
+		if (i > 0) {
+			previous = lyrics[i - 1];
+		}
+		else {
+			previous = sprite;
+		}
+		Color spriteColor = previous->color;
+		backgroundColor = background->color;
+		swirlColor = swirl->color;
+		while (backgroundColor == background->color) {
+			backgroundColor = Colors[rand() % Colors.size()];
+		}
+		while (swirlColor == swirl->color || swirlColor == backgroundColor || swirlColor == Color(255, 255, 255)) {
+			swirlColor = Colors[rand() % Colors.size()];
+		}
+		while (spriteColor == previous->color || spriteColor == backgroundColor || spriteColor == swirlColor) {
+			spriteColor = Colors[rand() % Colors.size()];
+		}
+		background->Color(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, background->color.r, background->color.g, background->color.b, 
+																				   backgroundColor.r, backgroundColor.g, backgroundColor.b);
+		swirl->Color(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, swirl->color.r, swirl->color.g, swirl->color.b,
+																			  swirlColor.r, swirlColor.g, swirlColor.b);
+		sprite->Color(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, sprite->color.r, sprite->color.g, sprite->color.b,
+																			   spriteColor.r, spriteColor.g, spriteColor.b);
 
 		// Spin applied to base sprite
 		// -5 to 0 degrees;
@@ -129,7 +197,9 @@ int main() {
 		}
 		double spinEnd = spinStart + spinAdd;
 
+		// If not last lyric
 		if (i < lyricInfos.size() - 1) {
+			// Do a squeeze effect
 			int scaleTime = lyricInfos[i].timing;
 			for (; scaleTime < lyricInfos[i + 1].timing - mspb * 1.5; scaleTime += mspb) {
 				if (offBeat) {
@@ -149,23 +219,28 @@ int main() {
 			else {
 				sprite->Scale(scaleTime, ending, scale, scale);
 			}
-
 			sprite->Rotate(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i + 1].timing - mspb * 1.5, spinStart, spinEnd);
 
+			// Fade
+			double spriteFade = 0.3;
 			sprite->Fade(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, 0.0, 1.0);
 			sprite->Fade(lyricInfos[i].timing, lyricInfos[i + 1].timing - mspb * 1.5, 1.0, 1.0);
-			// 30-70% opacity
-			double base = 0.3;
-			double variance = rand() % 40 / 100.0;
-			double fade = base + variance;
-			sprite->Fade(lyricInfos[i + 1].timing - mspb * 1.5, lyricInfos[i].timing, 1.0, fade);
-		}
+			sprite->Fade(lyricInfos[i + 1].timing - mspb * 1.5, lyricInfos[i].timing, 1.0, spriteFade);
 
+			// Since this isn't going to be ranked anyways, I don't really need to worry about SB Load, but
+			// since I'm probably not doing any zooming in and out and stuff, this shouldn't affect too much anyways
+			int limit = 5;
+			if (i < lyricInfos.size() - limit) {
+				sprite->Fade(lyricInfos[i + limit].timing - mspb * 1.5, lyricInfos[i + limit].timing, spriteFade, 0.0);
+			}
+		}
+		// Handle last lyric
 		else {
 			// Only do the scale squeeze if not the last lyric line
 			sprite->Scale(lyricInfos[i].timing, ending, scale, scale);
 
 			sprite->Rotate(lyricInfos[i].timing - mspb * 1.5, ending, spinStart, spinEnd);
+
 			sprite->Fade(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, 0.0, 1.0);
 		}
 
@@ -173,8 +248,6 @@ int main() {
 		if (i == 0) {
 			continue;
 		}
-
-		Sprite* previous = Storyboard::Instance()->sprites[i - 1];
 
 		bool foundMatch = false;
 		while (!foundMatch) {
@@ -208,7 +281,9 @@ int main() {
 
 			// Check if all previous collisions are fine
 			for (int j = i - 1; j >= 0; --j) {
-				Sprite old = *Storyboard::Instance()->sprites[j];
+				// Copy since there could be errors here
+				// and we don't want to make lasting changes
+				Sprite old = *lyrics[j];
 
 				old.position += move;
 				old.position.RotateAround(mid, rotation);
@@ -237,7 +312,7 @@ int main() {
 				}
 
 				for (int j = i - 1; j >= 0; --j) {
-					Sprite* old = Storyboard::Instance()->sprites[j];
+					Sprite* old = lyrics[j];
 
 					Vector2 endMove = old->position + move;
 					endMove.RotateAround(mid, rotation + spinStart);
@@ -248,23 +323,21 @@ int main() {
 					endMove.RotateAround(mid, spinAdd);
 					old->Move(lyricTime, endTime, old->position.x, old->position.y, endMove.x, endMove.y);
 					old->Rotate(lyricTime, endTime, old->rotation, old->rotation + spinAdd);
+
+					old->Color(startTime, lyricTime, old->color.r, old->color.g, old->color.b, spriteColor.r, spriteColor.g, spriteColor.b);
 				}
 			}
 		}
 	}
 
-	for (auto sprite : Storyboard::Instance()->sprites) {
+	// Fade all lyrics at end
+	for (auto sprite : lyrics) {
 		sprite->Fade(ending, ending + mspb * 1.5, sprite->fade, 0.0);
 	}
 
-	Sprite* sprite = new Sprite("blank.png", mid, Vector2(1366, 768), 1.0, Layer::Background);
-	sprite->Color(0, ending, 0, 0, 0, 0, 0, 0);
-	sprite->Fade(-mspb * 1.5, 0, 0.0, 1.0);
-	sprite->Fade(ending, ending + mspb * 1.5, 1.0, 0.0);
-
 	std::string destinationPath = R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\)"
 		R"(367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\)"
-		R"(MikitoP ft. Sana - I'm Just an Average Magical Girl, Sorry. (osuuci dot com).osb)";
+		R"(MikitoP ft. Sana - I'm Just an Average Magical Girl, Sorry. (Osuuki).osb)";
 	Storyboard::Instance()->Write(destinationPath);
 	std::cout << "Generation complete" << std::endl;
 

@@ -55,6 +55,7 @@ int getEnglishFontSize(sf::Font font, std::wstring text) {
 
 sf::Vector2u generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize, std::wstring english, int englishFontSize, std::string destinationPath) {
 	sf::Text kanjiText(sf::String(kanji), font, kanjiFontSize);
+	kanjiText.setStyle(sf::Text::Bold);
 	// The way SFML's getLocalBounds() works is pretty weird
 	// For reason, you have to add the .left and .top values
 	// to get the true values
@@ -63,6 +64,7 @@ sf::Vector2u generateImage(sf::Font font, std::wstring kanji, int kanjiFontSize,
 	int kanjiHeight = (int) ceil(kanjiRect.height + kanjiRect.top);
 
 	sf::Text englishText(sf::String(english), font, englishFontSize);
+	englishText.setStyle(sf::Text::Bold);
 	sf::FloatRect englishRect = englishText.getLocalBounds();
 	int englishWidth = (int) ceil(englishRect.width + englishRect.left);
 	int englishHeight = (int) ceil(englishRect.height + englishRect.top);
@@ -120,6 +122,7 @@ int main(int argc, char* argv[]) {
 	std::wstring line;
 	sf::Font prevFont;
 	std::vector<LyricInfo> lyricInfos;
+
 	std::string basePath = R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\Lyrics\)";
 
 	for (int i = 0; std::getline(file, line); i++) {

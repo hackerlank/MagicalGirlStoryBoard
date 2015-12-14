@@ -91,11 +91,14 @@ int main() {
 	std::vector<LyricInfo> lyricInfos = LyricInfoManager::Instance()->Read(lyricPath + "lyricsInfo.txt");
 	int ending = 213513;
 	double scale = 0.35;
+	double squeeze = scale * 0.97;
 	Vector2 mid(320, 240);
 	std::wcout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
-
 	// Controls which way to spin
 	bool leftSpin = true;
+	// Millisecond per beat
+	double mspb = 60000.0 / 155;
+
 	for (int i = 0; i < lyricInfos.size(); ++i) {
 		std::wcout << "Processing: " << lyricInfos[i].id << std::endl;
 		std::wcout << lyricInfos[i].kanji << std::endl;
@@ -104,7 +107,10 @@ int main() {
 		std::string path = "Lyrics/" + std::to_string(lyricInfos[i].id) + ".png";
 		Vector2 size(lyricInfos[i].width, lyricInfos[i].height);
 		Sprite* sprite = new Sprite(path, mid, size, scale);
-		sprite->Scale(0, ending, scale, scale);
+		sprite->Scale(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, scale * 0.75, scale);
+
+		// For choosing when to squeeze or use normal scale
+		bool offBeat = false;
 
 		// Spin applied to base sprite
 		// -5 to 0 degrees;
@@ -124,20 +130,43 @@ int main() {
 		double spinEnd = spinStart + spinAdd;
 
 		if (i < lyricInfos.size() - 1) {
-			sprite->Rotate(lyricInfos[i].timing - 500, lyricInfos[i + 1].timing - 500, spinStart, spinEnd);
+			int scaleTime = lyricInfos[i].timing;
+			for (; scaleTime < lyricInfos[i + 1].timing - mspb * 1.5; scaleTime += mspb) {
+				if (offBeat) {
+					sprite->Scale(scaleTime, scaleTime + mspb, squeeze, scale);
+					offBeat = false;
+				}
+				else {
+					sprite->Scale(scaleTime, scaleTime + mspb, scale, squeeze);
+					offBeat = true;
+				}
+			}
+			if (offBeat) {
+				sprite->Scale(scaleTime, scaleTime + mspb, squeeze, scale);
+				offBeat = false;
+				sprite->Scale(scaleTime + mspb, ending, scale, scale);
+			}
+			else {
+				sprite->Scale(scaleTime, ending, scale, scale);
+			}
 
-			sprite->Fade(lyricInfos[i].timing - 500, lyricInfos[i].timing, 0.0, 1.0);
-			sprite->Fade(lyricInfos[i].timing, lyricInfos[i + 1].timing - 500, 1.0, 1.0);
+			sprite->Rotate(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i + 1].timing - mspb * 1.5, spinStart, spinEnd);
+
+			sprite->Fade(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, 0.0, 1.0);
+			sprite->Fade(lyricInfos[i].timing, lyricInfos[i + 1].timing - mspb * 1.5, 1.0, 1.0);
 			// 30-70% opacity
 			double base = 0.3;
 			double variance = rand() % 40 / 100.0;
 			double fade = base + variance;
-			sprite->Fade(lyricInfos[i + 1].timing - 500, lyricInfos[i].timing, 1.0, fade);
+			sprite->Fade(lyricInfos[i + 1].timing - mspb * 1.5, lyricInfos[i].timing, 1.0, fade);
 		}
 
 		else {
-			sprite->Rotate(lyricInfos[i].timing - 500, ending, spinStart, spinEnd);
-			sprite->Fade(lyricInfos[i].timing - 500, lyricInfos[i].timing, 0.0, 1.0);
+			// Only do the scale squeeze if not the last lyric line
+			sprite->Scale(lyricInfos[i].timing, ending, scale, scale);
+
+			sprite->Rotate(lyricInfos[i].timing - mspb * 1.5, ending, spinStart, spinEnd);
+			sprite->Fade(lyricInfos[i].timing - mspb * 1.5, lyricInfos[i].timing, 0.0, 1.0);
 		}
 
 		// Ignore calculations for first lyric
@@ -198,10 +227,10 @@ int main() {
 				std::wcout << "Found Match" << std::endl;
 
 				int lyricTime = lyricInfos[i].timing;
-				int startTime = lyricTime - 500;
+				int startTime = lyricTime - mspb * 1.5;
 				int endTime;
 				if (i < lyricInfos.size() - 1) {
-					endTime = lyricInfos[i + 1].timing - 500;
+					endTime = lyricInfos[i + 1].timing - mspb * 1.5;
 				}
 				else {
 					endTime = ending;
@@ -225,13 +254,13 @@ int main() {
 	}
 
 	for (auto sprite : Storyboard::Instance()->sprites) {
-		sprite->Fade(ending, ending + 500, sprite->fade, 0.0);
+		sprite->Fade(ending, ending + mspb * 1.5, sprite->fade, 0.0);
 	}
 
 	Sprite* sprite = new Sprite("blank.png", mid, Vector2(1366, 768), 1.0, Layer::Background);
 	sprite->Color(0, ending, 0, 0, 0, 0, 0, 0);
-	sprite->Fade(-500, 0, 0.0, 1.0);
-	sprite->Fade(ending, ending + 500, 1.0, 0.0);
+	sprite->Fade(-mspb * 1.5, 0, 0.0, 1.0);
+	sprite->Fade(ending, ending + mspb * 1.5, 1.0, 0.0);
 
 	std::string destinationPath = R"(C:\Users\Wax Chug da Gwad\AppData\Local\osu!\Songs\)"
 		R"(367782 MikitoP ft Sana - I'm Just an Average Magical Girl, Sorry\)"

@@ -346,7 +346,7 @@ int main() {
 		delete sprite;
 	}
 
-	//std::cout << "Storyboard generation complete" << std::endl;
+	std::cout << "Storyboard generation complete" << std::endl;
 	//std::cin.get();
 
 	return 0;

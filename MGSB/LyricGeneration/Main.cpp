@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
 	std::string destinationPath(basePath + "lyricsInfo.txt");
 	LyricInfoManager::Instance()->Write(lyricInfos, destinationPath);
 
-	//std::cout << "Lyric generation complete" << std::endl;
+	std::cout << "Lyric generation complete" << std::endl;
 	//std::cin.get();
 
 	return 0;
